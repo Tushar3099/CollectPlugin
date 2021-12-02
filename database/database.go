@@ -20,7 +20,7 @@ func DBinstance(ctx context.Context) {
 
     mongouri :=os.Getenv("MONGODB_URI")
 	if mongouri == "" {
-		log.Fatal("Error: not able to load MONGOURI")
+		log.Fatal("Error: not able to load MONGODB_URI")
 	}
 
     client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(mongouri))
