@@ -32,7 +32,6 @@ func main() {
 	defer func() {
 		cancel()
 	}()
-	// database.Client.Database()
 	//registering routes
 	router := apis.NewRouter()
 
