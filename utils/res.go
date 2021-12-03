@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -17,8 +16,6 @@ type response struct {
 }
 
 func WriteError(err error, w http.ResponseWriter) {
-
-	log.Fatal(err.Error())
 	var response = errorResponse{
 		ErrorMessage: err.Error(),
 		StatusCode:   http.StatusInternalServerError,
@@ -36,7 +33,6 @@ func WriteError(err error, w http.ResponseWriter) {
 
 func WriteResponse(res interface{}, w http.ResponseWriter) {
 
-	// log.Fatal(err.Error())
 	var response = response{
 		StatusCode: http.StatusOK,
 		Data:       res,

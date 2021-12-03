@@ -11,17 +11,19 @@ type User struct {
 	Phone    string             `json:"phone,omitempty" bson:"phone,omitempty"`
 }
 
-// Here we are making Action an empty interface because
-// the struct can have different data according to the
-// Action, hence it will be type casted according to the
-// need in respective actions
+type Action interface {
+	Execute(form *Form) error
+	Initialize(form *Form) error
+}
+
 type Form struct {
-	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	UserId    primitive.ObjectID `json:"user_id,omitempty" bson:"user_id,omitempty"`
-	Title     string             `json:"title" bson:"title" `
-	Questions []Question         `json:"questions" bson:"questions"`
-	Answers   []Answer           `json:"answers" bson:"answers"`
-	Action    interface{}        `json:"action" bson:"action"`
+	ID         primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	UserId     primitive.ObjectID `json:"user_id,omitempty" bson:"user_id,omitempty"`
+	Title      string             `json:"title" bson:"title" `
+	Questions  []Question         `json:"questions" bson:"questions"`
+	Answers    []Answer           `json:"answers" bson:"answers"`
+	ActionName string             `json:"action_name" bson:"action_name"`
+	Action     Action             `json:"action" bson:"action"`
 }
 
 type Question struct {
