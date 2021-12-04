@@ -12,7 +12,7 @@ type User struct {
 }
 
 type Action interface {
-	Execute(form *Form) error
+	Execute(form *Form, ans *Answer) error
 	Initialize(form *Form) error
 }
 
@@ -37,8 +37,6 @@ type Response struct {
 }
 
 type Answer struct {
-	UserId primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	List   []struct {
-		Data []string `json:"data,omitempty" bson:"data,omitempty"`
-	}
+	UserId primitive.ObjectID `json:"user_id,omitempty" bson:"user_id,omitempty"`
+	List   [][]string         `json:"list,omitempty" bson:"list,omitempty"`
 }
