@@ -105,17 +105,16 @@ func PutForm(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Looks up for symbol (in this case variable)
-		constructor, err := plug.Lookup("Constructor")
+		action, err := plug.Lookup("Action")
 		if err != nil {
 			fmt.Printf("Plugin Error : %s", err.Error())
 			os.Exit(1)
 		}
-		f := constructor.(func(b *[]byte) *models.Form)(&bsonBytes)
+		var act models.Action = action.(models.Action)
+		f := act.Constructor(&bsonBytes)
 
 		// Executes the Plugin action
-		err = f.Action.Execute(f, &res.Ans)
-
-		if err != nil {
+		if err = f.Action.Execute(f, &res.Ans); err != nil {
 			utils.WriteError(err, w)
 			return
 		}
@@ -178,9 +177,7 @@ func PostForm(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Initialize the plugin and populate the action-meta data in form
-		err = form.Action.Initialize(&form)
-
-		if err != nil {
+		if err = form.Action.Initialize(&form); err != nil {
 			utils.WriteError(err, w)
 			return
 		}

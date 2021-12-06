@@ -12,6 +12,7 @@ type User struct {
 }
 
 type Action interface {
+	Constructor(b *[]byte) *Form
 	Execute(form *Form, ans *Answer) error
 	Initialize(form *Form) error
 }
