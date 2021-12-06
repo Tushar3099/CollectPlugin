@@ -6,27 +6,28 @@ import (
 	"github.com/Tushar3099/CollectPlugin/models"
 )
 
-type googleSheets struct {
-	Link string `json:"link" bson:"link"`
+type Structure struct {
 }
 
-func (g *googleSheets) Execute(form *models.Form) error {
-	fmt.Println(g.Link)
-	// fmt.Println("Hello Universe")
+func (g *Structure) Constructor(b *[]byte) *models.Form {
+	return &models.Form{}
+}
+
+func (g *Structure) Execute(form *models.Form, ans *models.Answer) error {
+	fmt.Println("Executing SMS action")
 	return nil
 }
 
-func (g *googleSheets) Initialize(form *models.Form) error {
+func (g *Structure) Initialize(form *models.Form) error {
 	g.validate()
-	g.Link = "tujhse kya matlab"
-	// fmt.Println("Hello Universe")
+	fmt.Println("Initalizing SMS Action")
 	return nil
 }
 
-func (g *googleSheets) validate() error {
+func (g *Structure) validate() error {
 	//validates if the action requires specific fields in forms
 	return nil
 }
 
 // exported as symbol named "Action"
-var Action googleSheets
+var Action Structure

@@ -84,6 +84,7 @@ func PutForm(w http.ResponseWriter, r *http.Request) {
 	// Validating the answers length
 	if len(form.Questions) != len(res.Ans.List) {
 		utils.WriteError(fmt.Errorf("answers length is not equal to questions length"), w)
+		return
 	}
 
 	// Checks if action is present in form
@@ -92,8 +93,8 @@ func PutForm(w http.ResponseWriter, r *http.Request) {
 		// Gets the path of plugin with the plugin-name
 		path, err := os.Getwd()
 		if err != nil {
-			log.Println(err)
-			return
+			log.Fatalf("Path Error : %s", err.Error())
+			os.Exit(1)
 		}
 		path = filepath.Join(path, "/actions/"+form.ActionName+"/action.so")
 

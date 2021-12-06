@@ -21,7 +21,7 @@ import (
 
 type Structure struct {
 	Link    string `json:"link" bson:"link"`
-	SheetId string `json:"form_id" bson:"form_id"`
+	SheetId string `json:"sheet_id" bson:"sheet_id"`
 }
 
 type NewForm struct {
