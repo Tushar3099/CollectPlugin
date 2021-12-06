@@ -39,5 +39,5 @@ type Response struct {
 
 type Answer struct {
 	UserId primitive.ObjectID `json:"user_id,omitempty" bson:"user_id,omitempty"`
-	List   [][]string         `json:"list,omitempty" bson:"list,omitempty"`
+	List   []string           `json:"list,omitempty" bson:"list,omitempty"`
 }

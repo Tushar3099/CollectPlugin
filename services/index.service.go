@@ -64,7 +64,7 @@ func PutForm(w http.ResponseWriter, r *http.Request) {
 
 	err := decoder.Decode(&res)
 	if err != nil {
-		utils.WriteError(fmt.Errorf("invalid fields"), w)
+		utils.WriteError(fmt.Errorf("unable to parse response body"), w)
 		return
 	}
 

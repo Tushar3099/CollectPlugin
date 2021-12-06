@@ -38,8 +38,51 @@ func (g *Structure) Constructor(b *[]byte) *models.Form {
 }
 
 func (g *Structure) Execute(form *models.Form, ans *models.Answer) error {
-	fmt.Println(g.Link)
-	// fmt.Println("Hello Universe")
+	ctx := context.Background()
+	path, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("unable to get dir path in plugin: %v", err)
+	}
+	path = filepath.Join(path, "/actions/"+form.ActionName+"/credentials.json")
+
+	b, err := ioutil.ReadFile(path)
+	if err != nil {
+		return fmt.Errorf("unable to read client secret file: %v", err)
+	}
+
+	// If modifying these scopes, delete your previously saved token.json.
+	config, err := google.ConfigFromJSON(b, "https://www.googleapis.com/auth/spreadsheets")
+	if err != nil {
+		return fmt.Errorf("unable to parse client secret file to config: %v", err)
+	}
+	client, err := getClient(config, form.ActionName, "sheet")
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+
+	// Retrieving Sheets Client
+	srv, err := sheets.NewService(ctx, option.WithHTTPClient(client))
+	if err != nil {
+		return fmt.Errorf("unable to retrieve Sheets client: %v", err)
+	}
+
+	writeRange := "A" + fmt.Sprintf("%v", 3+len(form.Answers))
+	var vr sheets.ValueRange
+	var myval []interface{}
+	myval = append(myval, ans.UserId.Hex())
+
+	for i := range form.Questions {
+		myval = append(myval, ans.List[i])
+	}
+
+	vr.Values = append(vr.Values, myval)
+	// Updating the spread sheet
+	_, err = srv.Spreadsheets.Values.Update(g.SheetId, writeRange, &vr).ValueInputOption("RAW").Do()
+
+	if err != nil {
+		return fmt.Errorf("unable to retrieve data from sheet. %v", err)
+	}
+
 	return nil
 }
 
@@ -150,7 +193,7 @@ func (g *Structure) Initialize(form *models.Form) error {
 		Type: "anyone",
 		Role: "reader",
 	}
-	_, err = gsrv.Permissions.Create(newSpreadSheet.SpreadsheetId, p).Do()
+	_, err = gsrv.Permissions.Create(spreadsheetId, p).Do()
 	if err != nil {
 
 		fmt.Printf("unable to make sheet public : %v", err.Error())
